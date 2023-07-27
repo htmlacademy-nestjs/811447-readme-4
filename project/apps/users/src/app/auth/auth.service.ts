@@ -1,5 +1,5 @@
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { BlogUserMemoryRepository } from '../blog-user/blog-user-memory.repository';
+import { BlogUserRepository } from '../blog-user/blog-user.repository';
 import { BlogUserEntity } from '../blog-user/blog-user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -8,7 +8,7 @@ import { AUTH_USER_EXISTS, AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG } from 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly blogUserRepository: BlogUserMemoryRepository
+    private readonly blogUserRepository: BlogUserRepository
   ) {}
 
   public async register(dto: CreateUserDto) {
