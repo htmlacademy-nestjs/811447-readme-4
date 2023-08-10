@@ -22,9 +22,10 @@ model Post {
   createdAt   DateTime  @default(now()) @map("created_at")
   publishAt   DateTime  @updatedAt @map("published_at")
   userId      String?   @map("user_id")
-  Type        Type?     @relation(fields: [typeTypeId], references: [typeId])
-  typeTypeId  Int?      @map("type_id")
+  Type        Type?     @relation(fields: [typeId], references: [typeId])
+  typeId      Int?      @map("type_id")
   Comment     Comment[]
+  Like        Like[]
 
   @@map("posts")
 }
@@ -38,14 +39,24 @@ model Type {
 }
 
 model Comment {
-  commentId  Int      @id @default(autoincrement()) @map("comment_id")
-  message    String
-  userId     String   @map("user_id")
-  post       Post     @relation(fields: [postPostId], references: [postId])
-  postId     Int      @map("post_id")
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
-  postPostId Int
+  commentId Int      @id @default(autoincrement()) @map("comment_id")
+  message   String
+  userId    String   @map("user_id")
+  post      Post     @relation(fields: [postId], references: [postId], onDelete: Cascade, onUpdate: Cascade)
+  postId    Int      @map("post_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("comments")
+}
+
+model Like {
+  likeId     Int      @id @default(autoincrement()) @map("like_id")
+  post       Post     @relation(fields: [postId], references: [postId], onDelete: Cascade)
+  postId     Int      @map("post_id")
+  userId     Int      @map("user_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("likes")
 }
