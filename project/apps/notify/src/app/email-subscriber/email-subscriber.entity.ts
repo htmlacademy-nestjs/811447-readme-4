@@ -14,7 +14,7 @@ export class EmailSubscriberEntity implements Entity<EmailSubscriberEntity>, Sub
   public fillEntity(entity) {
     this.email = entity.email;
     this.name = entity.name;
-    this.id = entity.id ?? '';
+    this.id = entity.id;
   }
 
   public toObject(): EmailSubscriberEntity {
