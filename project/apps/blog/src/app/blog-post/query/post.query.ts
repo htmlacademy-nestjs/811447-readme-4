@@ -1,6 +1,6 @@
 import { IsIn, IsNumber, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { DEFAULT_POST_COUNT_LIMIT, DEFAULT_SORT_DIRECTION } from '../blog-post.constant';
+import { DEFAULT_POST_COUNT_LIMIT, DEFAULT_SORT_DIRECTION, DEFAULT_SORT_BY } from '../blog-post.constant';
 import { PostType } from '@project/shared/app-types';
 
 export class PostQuery {
@@ -23,4 +23,11 @@ export class PostQuery {
   @Transform(({ value }) => +value)
   @IsOptional()
   public page: number;
+
+  @IsIn(['createdAt', 'likes', 'comments'])
+  @IsOptional()
+  public sortBy: 'createdAt' | 'likes' | 'comments' = DEFAULT_SORT_BY;
+
+  @IsOptional()
+  public tag?: string = '';
 }

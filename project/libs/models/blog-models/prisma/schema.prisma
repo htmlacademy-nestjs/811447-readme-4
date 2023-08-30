@@ -31,8 +31,10 @@ model Post {
   author       String?   @default("")
   photo        String?   @default("")
   tags         String[]
+  isRepost     Boolean   @default(false) @map("is_repost")
+  isPublished  Boolean   @default(true) @map("is_published")
   createdAt    DateTime  @default(now()) @map("created_at")
-  publishAt    DateTime?  @updatedAt @map("published_at")
+  publishAt    DateTime? @updatedAt @map("published_at")
   type         PostType
   comments     Comment[]
   likes        Like[]
