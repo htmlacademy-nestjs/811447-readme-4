@@ -1,16 +1,18 @@
-import { Logger } from '@nestjs/common';
-
 import { Entity } from '@project/util/util-types';
 import { PostType, PostBase, Post, Comment, PostVideo, PostPhoto, PostLink, PostQuote, PostText } from '@project/shared/app-types';
 
 export class BlogPostEntity implements Entity<BlogPostEntity>, PostBase {
   public id?: number;
   public userId: string;
+  public originPostId?: number;
+  public originUserId?: string;
   public comments?: Comment[];
   public tags?: string[];
   public type: PostType;
   public publishAt: Date;
   public createdAt: Date;
+  public isRepost?: boolean;
+  public isPublished?: boolean;
 
   constructor(post: Post) {
     this.fillEntity(post);
@@ -18,6 +20,10 @@ export class BlogPostEntity implements Entity<BlogPostEntity>, PostBase {
 
   public fillEntity(entity: Post): void {
     this.id = entity.id;
+    this.originPostId = entity.originPostId;
+    this.originUserId = entity.originUserId;
+    this.isRepost = entity.isRepost;
+    this.isPublished = entity.isPublished;
     this.type = entity.type;
     this.userId = entity.userId;
     this.tags = entity.tags ?? [];
@@ -42,8 +48,6 @@ export class BlogPostVideoEntity extends BlogPostEntity implements Entity<BlogPo
   constructor(post: PostVideo) {
     super(post);
     this.fillEntity(post);
-    Logger.log(this);
-
   }
 
   public fillEntity(entity: PostVideo): void {
@@ -54,6 +58,10 @@ export class BlogPostVideoEntity extends BlogPostEntity implements Entity<BlogPo
     this.id = entity.id;
     this.type = entity.type;
     this.userId = entity.userId;
+    this.originPostId = entity.originPostId;
+    this.originUserId = entity.originUserId;
+    this.isRepost = entity.isRepost;
+    this.isPublished = entity.isPublished;
     this.tags = entity.tags ?? [];
     this.comments = entity.comments ?? [];
     this.publishAt = entity.publishAt ? new Date(entity.publishAt) : new Date();
@@ -87,6 +95,10 @@ export class BlogPostTextEntity extends BlogPostEntity implements Entity<BlogPos
     this.id = entity.id;
     this.type = entity.type;
     this.userId = entity.userId;
+    this.originPostId = entity.originPostId;
+    this.originUserId = entity.originUserId;
+    this.isRepost = entity.isRepost;
+    this.isPublished = entity.isPublished;
     this.tags = entity.tags ?? [];
     this.comments = entity.comments ?? [];
     this.publishAt = entity.publishAt ? new Date(entity.publishAt) : new Date();
@@ -118,6 +130,10 @@ export class BlogPostQuoteEntity extends BlogPostEntity implements Entity<BlogPo
     this.id = entity.id;
     this.type = entity.type;
     this.userId = entity.userId;
+    this.originPostId = entity.originPostId;
+    this.originUserId = entity.originUserId;
+    this.isRepost = entity.isRepost;
+    this.isPublished = entity.isPublished;
     this.tags = entity.tags ?? [];
     this.comments = entity.comments ?? [];
     this.publishAt = entity.publishAt ? new Date(entity.publishAt) : new Date();
@@ -149,6 +165,10 @@ export class BlogPostLinkEntity extends BlogPostEntity implements Entity<BlogPos
     this.id = entity.id;
     this.type = entity.type;
     this.userId = entity.userId;
+    this.originPostId = entity.originPostId;
+    this.originUserId = entity.originUserId;
+    this.isRepost = entity.isRepost;
+    this.isPublished = entity.isPublished;
     this.tags = entity.tags ?? [];
     this.comments = entity.comments ?? [];
     this.publishAt = entity.publishAt ? new Date(entity.publishAt) : new Date();
@@ -178,6 +198,10 @@ export class BlogPostPhotoEntity extends BlogPostEntity implements Entity<BlogPo
     this.id = entity.id;
     this.type = entity.type;
     this.userId = entity.userId;
+    this.originPostId = entity.originPostId;
+    this.originUserId = entity.originUserId;
+    this.isRepost = entity.isRepost;
+    this.isPublished = entity.isPublished;
     this.tags = entity.tags ?? [];
     this.comments = entity.comments ?? [];
     this.publishAt = entity.publishAt ? new Date(entity.publishAt) : new Date();

@@ -11,6 +11,13 @@ export class PostRdo {
   public postId: number;
 
   @ApiProperty({
+    description: 'Origin post ID',
+    example: 1
+  })
+  @Expose()
+  public originPostId: number;
+
+  @ApiProperty({
     description: 'Title',
     example: 'Title'
   })
@@ -72,6 +79,13 @@ export class PostRdo {
   })
   @Expose()
   public userId: string;
+
+  @ApiProperty({
+    description: 'Origin user ID',
+    example: '1'
+  })
+  @Expose()
+  public originUserId: string;
 
   @ApiProperty({
     description: 'Post status',
