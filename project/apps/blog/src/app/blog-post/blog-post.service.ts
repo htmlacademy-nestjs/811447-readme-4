@@ -1,21 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { BlogPostRepository } from './blog-post.repository';
 import { CreatePostDto } from './dto/create-post.dto';
-import { PostType } from '@project/shared/app-types';
-import { BlogPostLinkEntity, BlogPostPhotoEntity, BlogPostQuoteEntity, BlogPostTextEntity, BlogPostVideoEntity  } from './blog-post.entity';
+import { BlogEntity } from './blog-post.entity';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostQuery } from './query/post.query';
 
 import { Post as BlogPostType } from '@prisma/client';
 import { SearchQuery } from './query/search.query';
+import { prepareTags } from '@project/util/util-core';
 
-const entity = {
-  [PostType.Video]: BlogPostVideoEntity,
-  [PostType.Text]: BlogPostTextEntity,
-  [PostType.Link]: BlogPostLinkEntity,
-  [PostType.Photo]: BlogPostPhotoEntity,
-  [PostType.Quote]: BlogPostQuoteEntity
-}
+
 @Injectable()
 export class BlogPostService {
   constructor(
@@ -23,7 +17,13 @@ export class BlogPostService {
   ) {}
 
   async createPost(dto: CreatePostDto): Promise<BlogPostType> {
-    const postEntity = new entity[dto.type]({ ...dto, comments: [] });
+    const post = { ...dto }
+    if (dto.postId && !dto.isRepost) {
+      post.originPostId = dto.postId
+      post.originUserId = dto.userId
+      post.isRepost = true
+    }
+    const postEntity = new BlogEntity[dto.type]({ ...post, comments: [], tags: prepareTags(dto.tags) });
     return this.blogPostRepository.create(postEntity);
   }
 

@@ -35,7 +35,7 @@ export class PostQuery {
   })
   @IsIn(['asc', 'desc'])
   @IsOptional()
-  public sortDirection: 'desc' | 'asc' = DEFAULT_SORT_DIRECTION;
+  public sortDirection?: 'desc' | 'asc' = DEFAULT_SORT_DIRECTION;
 
   @ApiProperty({
     description: 'Page',
@@ -43,7 +43,7 @@ export class PostQuery {
   })
   @Transform(({ value }) => +value)
   @IsOptional()
-  public page: number;
+  public page?: number;
 
   @ApiProperty({
     description: 'Sort by',
@@ -51,7 +51,7 @@ export class PostQuery {
   })
   @IsIn(['createdAt', 'likes', 'comments'])
   @IsOptional()
-  public sortBy: 'createdAt' | 'likes' | 'comments' = DEFAULT_SORT_BY;
+  public sortBy?: 'createdAt' | 'likes' | 'comments' = DEFAULT_SORT_BY;
 
   @ApiProperty({
     description: 'Tag',
