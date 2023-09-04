@@ -4,7 +4,6 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { BlogEntity } from './blog-post.entity';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostQuery } from './query/post.query';
-
 import { Post as BlogPostType } from '@prisma/client';
 import { SearchQuery } from './query/search.query';
 import { prepareTags } from '@project/util/util-core';
@@ -16,8 +15,8 @@ export class BlogPostService {
     private readonly blogPostRepository: BlogPostRepository,
   ) {}
 
-  async createPost(dto: CreatePostDto): Promise<BlogPostType> {
-    const post = { ...dto }
+  async createPost(dto: CreatePostDto, userId: string): Promise<BlogPostType> {
+    const post = { ...dto, userId }
     if (dto.postId && !dto.isRepost) {
       post.originPostId = dto.postId
       post.originUserId = dto.userId

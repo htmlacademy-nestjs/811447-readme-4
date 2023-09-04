@@ -1,7 +1,7 @@
 import { Body, Req, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, UseGuards, Logger } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BlogPostService } from './blog-post.service';
-import { fillObject } from '@project/util/util-core';
+import { fillObject, JwtAuthGuard } from '@project/util/util-core';
 import { PostRdo } from './rdo/post.rdo';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -10,16 +10,16 @@ import { SearchQuery } from './query/search.query';
 import { PostMessages } from './blog-post.constant';
 import { CreatePostValidationPipe } from './pipes/create-post-validation.pipe';
 import { UpdatePostValidationPipe } from './pipes/update-post-validation.pipe';
-import { JwtAuthGuard } from '@project/util/util-core';
 import { RequestWithTokenPayload } from '@project/shared/app-types';
 import { BlogNotifyService } from '../blog-notify/blog-notify.service';
+import { CheckAuthGuard } from '../guards/check-auth.guard';
 
 @ApiTags('posts')
 @Controller('posts')
 export class BlogPostController {
   constructor(
     private readonly blogPostService: BlogPostService,
-    private readonly blogNotifyService: BlogNotifyService
+    private readonly blogNotifyService: BlogNotifyService,
   ) {}
 
 
@@ -39,8 +39,7 @@ export class BlogPostController {
   })
   // @UseGuards(JwtAuthGuard)
   @Get('/news')
-  public async sendNews(@Req() {user}: RequestWithTokenPayload, @Query() query: PostQuery) {
-    Logger.log(user)
+  public async sendNews(@Req() { user }: RequestWithTokenPayload, @Query() query: PostQuery) {
     const { email, sub } = { email:'user4@notfound.local', sub: ' 64f53391170335607db66f7b' };
     const posts = await this.blogPostService.getPosts(query)
     this.blogNotifyService.sendNews({ email, posts, id:sub });
@@ -62,6 +61,7 @@ export class BlogPostController {
     status: HttpStatus.OK,
     description: PostMessages.ShowAll
   })
+  @UseGuards(CheckAuthGuard)
   @Get('/')
   async index(@Query() query: PostQuery) {
     const posts = await this.blogPostService.getPosts(query);
@@ -73,10 +73,10 @@ export class BlogPostController {
     status: HttpStatus.OK,
     description: PostMessages.Add
   })
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(CheckAuthGuard)
   @Post('/')
   async create(@Req() { user }: RequestWithTokenPayload, @Body(CreatePostValidationPipe) dto: CreatePostDto) {
-    const newPost = await this.blogPostService.createPost(dto);
+    const newPost = await this.blogPostService.createPost(dto, user.sub);
     return fillObject(PostRdo, newPost);
   }
 
