@@ -12,12 +12,14 @@ import { CreatePostValidationPipe } from './pipes/create-post-validation.pipe';
 import { UpdatePostValidationPipe } from './pipes/update-post-validation.pipe';
 import { JwtAuthGuard } from '@project/util/util-core';
 import { RequestWithTokenPayload } from '@project/shared/app-types';
+import { BlogNotifyService } from '../blog-notify/blog-notify.service';
 
 @ApiTags('posts')
 @Controller('posts')
 export class BlogPostController {
   constructor(
-    private readonly blogPostService: BlogPostService
+    private readonly blogPostService: BlogPostService,
+    private readonly blogNotifyService: BlogNotifyService
   ) {}
 
 
@@ -29,6 +31,19 @@ export class BlogPostController {
   async search(@Query() query: SearchQuery) {
     const posts = await this.blogPostService.getPostsBySearch(query);
     return fillObject(PostRdo, posts);
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: PostMessages.SendNews
+  })
+  // @UseGuards(JwtAuthGuard)
+  @Get('/news')
+  public async sendNews(@Req() {user}: RequestWithTokenPayload, @Query() query: PostQuery) {
+    Logger.log(user)
+    const { email, sub } = { email:'user4@notfound.local', sub: ' 64f53391170335607db66f7b' };
+    const posts = await this.blogPostService.getPosts(query)
+    this.blogNotifyService.sendNews({ email, posts, id:sub });
   }
 
   @ApiResponse({
@@ -58,7 +73,7 @@ export class BlogPostController {
     status: HttpStatus.OK,
     description: PostMessages.Add
   })
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post('/')
   async create(@Req() { user }: RequestWithTokenPayload, @Body(CreatePostValidationPipe) dto: CreatePostDto) {
     const newPost = await this.blogPostService.createPost(dto);
