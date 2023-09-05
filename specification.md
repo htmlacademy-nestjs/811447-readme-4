@@ -3,10 +3,25 @@
 ## Docker
 
 В директории project выполнить команды
-- Сервис blog `docker compose -f ./apps/blog/docker-compose.dev.yml --project-name "project" up -d`
-- Сервис notify `docker compose -f ./apps/notify/docker-compose.dev.yml --project-name "project" up -d`
-- Сервис uploader `docker compose -f ./apps/uploader/docker-compose.dev.yml --project-name "project" up -d`
-- Сервис users `docker compose -f ./apps/users/docker-compose.dev.yml --project-name "project-users" up -d`
+- Сервис blog 
+```
+docker compose -f ./apps/blog/docker-compose.dev.yml --project-name "project" up -d
+```
+
+- Сервис notify 
+```  
+docker compose -f ./apps/notify/docker-compose.dev.yml --project-name "project" up -d
+```
+
+- Сервис uploader 
+```
+docker compose -f ./apps/uploader/docker-compose.dev.yml --project-name "project" up -d
+```
+
+- Сервис users 
+```
+docker compose -f ./apps/users/docker-compose.dev.yml --project-name "project-users" up -d
+```
 
 ## Переменные окружения
 
@@ -20,9 +35,20 @@
 
 ## База данных сервиса blog
 
-- Миграции `nx run blog:db:migrate`
-- Генерация Prisma-client `nx run blog:db:generate`
-- Сидер `nx run blog:db:seed`
+- Миграции 
+```
+nx run blog:db:migrate
+```
+
+- Генерация Prisma-client 
+```
+nx run blog:db:generate
+```
+
+- Сидер 
+```
+nx run blog:db:seed
+```
 
 ## Старт проекта в dev режиме
 
