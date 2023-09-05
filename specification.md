@@ -61,5 +61,5 @@ npm i
 - Запустить сервисы 
 
 ```
-nx run-many -t serve -p blog notify uploader users
+nx run-many -t serve -p users blog notify uploader 
 ```
