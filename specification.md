@@ -31,7 +31,7 @@ docker compose -f ./apps/users/docker-compose.dev.yml --project-name "project-us
 - Сервис uploader `project/apps/uploader/.uploader.env`
 - Сервис users `project/apps/users/.users.env`
 
-Для подключения к базе данных сервиса blog перменные окружения в файле `project/libs/models/prisma/.env`
+Для подключения к базе данных сервиса blog переменные окружения в файле `project/libs/models/prisma/.env`
 
 ## База данных сервиса blog
 
