@@ -1,26 +1,9 @@
-# Create a new user
-POST http://localhost:3001/api/auth/register HTTP/1.1
-Content-Type: application/json
-
-{
-  "email": "user@notfound.local",
-  "name": "Keks",
-  "password": "123456"
-}
-
-###
-
-# Get user by ID
-GET http://localhost:3001/api/auth/64e6edefef7ef5a05b3d6863 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGU2ZWRlZmVmN2VmNWEwNWIzZDY4NjMiLCJlbWFpbCI6InVzZXJAbm90Zm91bmQubG9jYWwiLCJuYW1lIjoiS2VrcyIsImF2YXRhciI6IiIsImlhdCI6MTY5MzA1ODUxNCwiZXhwIjoxNjkzMDU5MTE0fQ.FLY1FC0tF0OFHKNA2yF6bnPNzK1RZH8cKzlDmh-xz40
-###
-
 # Login user by email and password
 POST http://localhost:3001/api/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "user@notfound.local",
+  "email": "user2@notfound.local",
   "password": "123456"
 }
 
@@ -33,6 +16,6 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGU2ZWRlZmVmN2Vm
 ###
 # Check user token
 POST http://localhost:3001/api/auth/check HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGU2ZWRlZmVmN2VmNWEwNWIzZDY4NjMiLCJlbWFpbCI6InVzZXJAbm90Zm91bmQubG9jYWwiLCJuYW1lIjoiS2VrcyIsImF2YXRhciI6IiIsImlhdCI6MTY5MzA1OTUxMCwiZXhwIjoxNjkzMDYwMTEwfQ.UL9tTERyrwbSNMcKwFpg08TiZ8ogNE2SPM8KtFf_8I4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGYyMDRiMTg3YjhmMDU1YmFjODJjNzgiLCJlbWFpbCI6InVzZXIyQG5vdGZvdW5kLmxvY2FsIiwibmFtZSI6Iktla3MiLCJhdmF0YXIiOiIiLCJpYXQiOjE2OTM1ODI1MjUsImV4cCI6MTY5MzU4MzEyNX0.9p4JejrpJmMd3Ei3coHhu_nGdYQ7AP4LrtKPFeKNZZk
 
 ###
