@@ -1,7 +1,7 @@
-import { Body, Req, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, UseGuards, Logger } from '@nestjs/common';
+import { Body, Req, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BlogPostService } from './blog-post.service';
-import { fillObject, JwtAuthGuard } from '@project/util/util-core';
+import { fillObject } from '@project/util/util-core';
 import { PostRdo } from './rdo/post.rdo';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -37,12 +37,23 @@ export class BlogPostController {
     status: HttpStatus.OK,
     description: PostMessages.SendNews
   })
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(CheckAuthGuard)
   @Get('/news')
   public async sendNews(@Req() { user }: RequestWithTokenPayload, @Query() query: PostQuery) {
-    const { email, sub } = { email:'user4@notfound.local', sub: ' 64f53391170335607db66f7b' };
+    const { email, sub } = user;
     const posts = await this.blogPostService.getPosts(query)
     this.blogNotifyService.sendNews({ email, posts, id:sub });
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: PostMessages.ShowUnpublished
+  })
+  @UseGuards(CheckAuthGuard)
+  @Get('/unpublished')
+  public async showUnpublishedPosts(@Req() { user }: RequestWithTokenPayload) {
+    const posts = await this.blogPostService.getUnpublishedPosts(user.sub)
+    return fillObject(PostRdo, posts);
   }
 
   @ApiResponse({
@@ -61,7 +72,6 @@ export class BlogPostController {
     status: HttpStatus.OK,
     description: PostMessages.ShowAll
   })
-  @UseGuards(CheckAuthGuard)
   @Get('/')
   async index(@Query() query: PostQuery) {
     const posts = await this.blogPostService.getPosts(query);
@@ -84,10 +94,11 @@ export class BlogPostController {
     status: HttpStatus.NO_CONTENT,
     description: PostMessages.Remove
   })
+  @UseGuards(CheckAuthGuard)
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async destroy(@Param('id') id: number) {
-    this.blogPostService.deletePost(id);
+  async destroy(@Req() { user }: RequestWithTokenPayload, @Param('id') id: number) {
+    this.blogPostService.deletePost(id, user.sub);
   }
 
   @ApiResponse({
@@ -95,9 +106,10 @@ export class BlogPostController {
     status: HttpStatus.OK,
     description: PostMessages.Update
   })
+  @UseGuards(CheckAuthGuard)
   @Patch('/:id')
-  async update(@Param('id') id: number, @Body(UpdatePostValidationPipe) dto: UpdatePostDto) {
-    const updatedPost = await this.blogPostService.updatePost(id, dto);
+  async update(@Req() { user }: RequestWithTokenPayload, @Param('id') id: number, @Body(UpdatePostValidationPipe) dto: UpdatePostDto) {
+    const updatedPost = await this.blogPostService.updatePost(id, dto, user.sub);
     return fillObject(PostRdo, updatedPost);
   }
 
@@ -106,9 +118,10 @@ export class BlogPostController {
     status: HttpStatus.OK,
     description: PostMessages.Update
   })
+  @UseGuards(CheckAuthGuard)
   @Patch('/publish/:id')
-  async publish(@Param('id') id: number, @Body() dto: UpdatePostDto) {
-    const updatedPost = await this.blogPostService.updatePost(id, { ...dto, isPublished: true, publishAt: new Date() });
+  async publish(@Req() { user }: RequestWithTokenPayload, @Param('id') id: number, @Body() dto: UpdatePostDto) {
+    const updatedPost = await this.blogPostService.updatePost(id, { ...dto, isPublished: true, publishAt: new Date() }, user.sub);
     return fillObject(PostRdo, updatedPost);
   }
 
@@ -117,9 +130,10 @@ export class BlogPostController {
     status: HttpStatus.OK,
     description: PostMessages.Update
   })
+  @UseGuards(CheckAuthGuard)
   @Patch('/unpublish/:id')
-  async unpublish(@Param('id') id: number, @Body() dto: UpdatePostDto) {
-    const updatedPost = await this.blogPostService.updatePost(id, { ...dto, isPublished: false, publishAt: null });
+  async unpublish(@Req() { user }: RequestWithTokenPayload, @Param('id') id: number, @Body() dto: UpdatePostDto) {
+    const updatedPost = await this.blogPostService.updatePost(id, { ...dto, isPublished: false, publishAt: null }, user.sub);
     return fillObject(PostRdo, updatedPost);
   }
 }

@@ -17,17 +17,24 @@ export class BlogPostService {
 
   async createPost(dto: CreatePostDto, userId: string): Promise<BlogPostType> {
     const post = { ...dto, userId }
-    if (dto.postId && !dto.isRepost) {
-      post.originPostId = dto.postId
-      post.originUserId = dto.userId
+
+    if (dto?.postId) {
+      const repostingPost = await this.getPost(dto.postId);
+      post.originPostId = repostingPost.postId
+      post.originUserId = repostingPost.userId
       post.isRepost = true
     }
+
     const postEntity = new BlogEntity[dto.type]({ ...post, comments: [], tags: prepareTags(dto.tags) });
     return this.blogPostRepository.create(postEntity);
   }
 
-  async deletePost(id: number): Promise<void> {
-    this.blogPostRepository.destroy(id);
+  async deletePost(id: number, userId: string): Promise<void> {
+    const deletingPost = await this.getPost(id);
+
+    if (deletingPost?.userId === userId) {
+      this.blogPostRepository.destroy(id);
+    }
   }
 
   async getPost(id: number): Promise<BlogPostType> {
@@ -38,11 +45,19 @@ export class BlogPostService {
     return this.blogPostRepository.find(query);
   }
 
+  async getUnpublishedPosts(userId: string): Promise<BlogPostType[]> {
+    return this.blogPostRepository.findUnpublishedPosts(userId);
+  }
+
   async getPostsBySearch(search: SearchQuery): Promise<BlogPostType[]> {
     return this.blogPostRepository.search(search);
   }
 
-  async updatePost(id: number, dto: UpdatePostDto): Promise<BlogPostType> {
-    return this.blogPostRepository.update(id, dto);
+  async updatePost(id: number, dto: UpdatePostDto, userId: string): Promise<BlogPostType> {
+    const editingPost = await this.getPost(id);
+
+    if (editingPost?.userId === userId) {
+      return this.blogPostRepository.update(id, dto);
+    }
   }
 }

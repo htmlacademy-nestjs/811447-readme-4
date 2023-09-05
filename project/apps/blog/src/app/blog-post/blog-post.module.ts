@@ -8,9 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtAccessStrategy, getJwtOptions } from '@project/util/util-core';
 import { BlogNotifyModule } from "../blog-notify/blog-notify.module";
 import { CheckAuthGuard } from '../guards/check-auth.guard';
-
-const HTTP_CLIENT_MAX_REDIRECTS = 5;
-const HTTP_CLIENT_TIMEOUT = 5000;
+import { HTTP_CLIENT_MAX_REDIRECTS, HTTP_CLIENT_TIMEOUT } from "../app.constant";
 @Module({
   imports: [
     HttpModule.register({

@@ -1,5 +1,5 @@
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Req, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { BlogCommentService } from './blog-comment.service';
 import { fillObject } from '@project/util/util-core';
 import { CommentRdo } from './rdo/comment.rdo';
@@ -9,6 +9,8 @@ import { CommentQuery } from './query/comment.query';
 import { CommentsMessages } from './blog-comment.constant';
 import { CreateCommentValidationPipe } from './pipes/create-comment-validation.pipe';
 import { UpdateCommentValidationPipe } from './pipes/update-comment-validation.pipe';
+import { CheckAuthGuard } from '../guards/check-auth.guard';
+import { RequestWithTokenPayload } from '@project/shared/app-types';
 
 @ApiTags('comments')
 @Controller('comments')
@@ -44,9 +46,10 @@ export class BlogCommentController {
     status: HttpStatus.CREATED,
     description: CommentsMessages.Add
   })
+  @UseGuards(CheckAuthGuard)
   @Post('/')
-  async create(@Body(CreateCommentValidationPipe) dto: CreateCommentDto) {
-    const newComment = await this.blogCommentService.createComment(dto);
+  async create(@Req() { user }: RequestWithTokenPayload, @Body(CreateCommentValidationPipe) dto: CreateCommentDto) {
+    const newComment = await this.blogCommentService.createComment(dto, user.sub);
     return fillObject(CommentRdo, newComment);
   }
 
@@ -54,10 +57,11 @@ export class BlogCommentController {
     status: HttpStatus.NO_CONTENT,
     description: CommentsMessages.Remove
   })
+  @UseGuards(CheckAuthGuard)
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async destroy(@Param('id') id: number) {
-    this.blogCommentService.deleteComment(id);
+  async destroy(@Req() { user }: RequestWithTokenPayload, @Param('id') id: number) {
+    this.blogCommentService.deleteComment(id, user.sub);
   }
 
   @ApiResponse({
@@ -65,9 +69,10 @@ export class BlogCommentController {
     status: HttpStatus.OK,
     description: CommentsMessages.Update
   })
+  @UseGuards(CheckAuthGuard)
   @Patch('/:id')
-  async update(@Param('id') id: number, @Body(UpdateCommentValidationPipe) dto: UpdateCommentDto) {
-    const updatedComment = await this.blogCommentService.updateComment(id, dto);
+  async update(@Req() { user }: RequestWithTokenPayload, @Param('id') id: number, @Body(UpdateCommentValidationPipe) dto: UpdateCommentDto) {
+    const updatedComment = await this.blogCommentService.updateComment(id, dto, user.sub);
     return fillObject(CommentRdo, updatedComment);
   }
 }
