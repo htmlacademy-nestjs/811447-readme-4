@@ -8,7 +8,6 @@ import { Post as BlogPostType } from '@prisma/client';
 import { SearchQuery } from './query/search.query';
 import { prepareTags } from '@project/util/util-core';
 
-
 @Injectable()
 export class BlogPostService {
   constructor(
