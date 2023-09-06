@@ -2,8 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { BlogUserRepository } from '../blog-user/blog-user.repository';
 import { BlogUserEntity } from '../blog-user/blog-user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import { AUTH_USER_EXISTS } from './blog-user.constant';
-
+import { AuthUserMessage } from '../auth/auth.constant';
 
 @Injectable()
 export class BlogUserService {
@@ -25,7 +24,7 @@ export class BlogUserService {
       .findByEmail(email);
 
     if (existUser) {
-      throw new ConflictException(AUTH_USER_EXISTS);
+      throw new ConflictException(AuthUserMessage.Exists);
     }
 
     const userEntity = await new BlogUserEntity(blogUser)

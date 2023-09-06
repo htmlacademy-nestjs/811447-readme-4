@@ -7,7 +7,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostQuery } from './query/post.query';
 import { SearchQuery } from './query/search.query';
-import { PostMessages } from './blog-post.constant';
+import { PostMessage } from './blog-post.constant';
 import { CreatePostValidationPipe } from './pipes/create-post-validation.pipe';
 import { UpdatePostValidationPipe } from './pipes/update-post-validation.pipe';
 import { RequestWithTokenPayload } from '@project/shared/app-types';
@@ -25,7 +25,7 @@ export class BlogPostController {
 
   @ApiResponse({
     status: HttpStatus.OK,
-    description: PostMessages.Search
+    description: PostMessage.Search
   })
   @Get('/search')
   async search(@Query() query: SearchQuery) {
@@ -35,7 +35,7 @@ export class BlogPostController {
 
   @ApiResponse({
     status: HttpStatus.OK,
-    description: PostMessages.SendNews
+    description: PostMessage.SendNews
   })
   @UseGuards(CheckAuthGuard)
   @Get('/news')
@@ -47,7 +47,7 @@ export class BlogPostController {
 
   @ApiResponse({
     status: HttpStatus.OK,
-    description: PostMessages.ShowUnpublished
+    description: PostMessage.ShowUnpublished
   })
   @UseGuards(CheckAuthGuard)
   @Get('/unpublished')
@@ -59,7 +59,7 @@ export class BlogPostController {
   @ApiResponse({
     type: PostRdo,
     status: HttpStatus.OK,
-    description: PostMessages.Show
+    description: PostMessage.Show
   })
   @Get('/:id')
   async show(@Param('id') id: number) {
@@ -70,7 +70,7 @@ export class BlogPostController {
   @ApiResponse({
     type: PostRdo,
     status: HttpStatus.OK,
-    description: PostMessages.ShowAll
+    description: PostMessage.ShowAll
   })
   @Get('/')
   async index(@Query() query: PostQuery) {
@@ -81,7 +81,7 @@ export class BlogPostController {
   @ApiResponse({
     type: PostRdo,
     status: HttpStatus.OK,
-    description: PostMessages.Add
+    description: PostMessage.Add
   })
   @UseGuards(CheckAuthGuard)
   @Post('/')
@@ -92,7 +92,7 @@ export class BlogPostController {
 
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
-    description: PostMessages.Remove
+    description: PostMessage.Remove
   })
   @UseGuards(CheckAuthGuard)
   @Delete('/:id')
@@ -104,7 +104,7 @@ export class BlogPostController {
   @ApiResponse({
     type: PostRdo,
     status: HttpStatus.OK,
-    description: PostMessages.Update
+    description: PostMessage.Update
   })
   @UseGuards(CheckAuthGuard)
   @Patch('/:id')
@@ -116,7 +116,7 @@ export class BlogPostController {
   @ApiResponse({
     type: PostRdo,
     status: HttpStatus.OK,
-    description: PostMessages.Update
+    description: PostMessage.Update
   })
   @UseGuards(CheckAuthGuard)
   @Patch('/publish/:id')
@@ -128,7 +128,7 @@ export class BlogPostController {
   @ApiResponse({
     type: PostRdo,
     status: HttpStatus.OK,
-    description: PostMessages.Update
+    description: PostMessage.Update
   })
   @UseGuards(CheckAuthGuard)
   @Patch('/unpublish/:id')
