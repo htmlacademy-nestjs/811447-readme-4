@@ -82,14 +82,14 @@ Content-Type: application/json
 ###
 
 # Publish post
-PATCH http://localhost:3005/api/posts/publish/19 HTTP/1.1
+PATCH http://localhost:3005/api/posts/publish/7 HTTP/1.1
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 ###
 
 # Unpublish post
-PATCH http://localhost:3005/api/posts/unpublish/19 HTTP/1.1
+PATCH http://localhost:3005/api/posts/unpublish/7 HTTP/1.1
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
