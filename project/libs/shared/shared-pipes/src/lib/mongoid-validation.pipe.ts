@@ -3,11 +3,12 @@ import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from
 
 const PIPE_ERROR = 'This pipe must used only with params!';
 const BAD_MONGOID_ERROR = 'Bad entity ID';
+const TYPE = 'param';
 
 @Injectable()
 export class MongoidValidationPipe implements PipeTransform {
   transform(value: string, { type }: ArgumentMetadata) {
-    if (type !== 'param') {
+    if (type !== TYPE) {
       throw new Error(PIPE_ERROR);
     }
 
